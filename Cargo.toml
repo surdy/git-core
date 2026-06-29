@@ -7,9 +7,17 @@ license = "Apache-2.0"
 description = "Host-agnostic git history, diff, and status engine shared across surdy's apps (pterm, madari, notesmith)."
 repository = "https://github.com/surdy/git-core"
 
+[features]
+# Enables TypeScript type generation for the @surdy/git-core-types package.
+# Off by default so normal consumers don't pull in ts-rs. Generate with:
+#   TS_RS_EXPORT_DIR=$PWD/packages/git-core-types/src/generated \
+#     cargo test --features typegen export_bindings
+typegen = ["dep:ts-rs"]
+
 [dependencies]
 serde = { version = "1", features = ["derive"] }
 shared_child = "1"
+ts-rs = { version = "12", optional = true }
 
 [dev-dependencies]
 tempfile = "3"

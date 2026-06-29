@@ -1,0 +1,332 @@
+/*
+ * @surdy/git-history-react — standalone theming via CSS custom properties.
+ *
+ * Hosts theme the panel by setting any of these `--gh-*` vars on a wrapper
+ * element (or :root). Every rule below carries a literal fallback so the
+ * library looks reasonable with zero host configuration. This package's CSS
+ * is intentionally independent of any host token system.
+ *
+ *   --gh-bg          panel/page background
+ *   --gh-panel       commit-list / sidebar surface
+ *   --gh-text        primary text
+ *   --gh-muted       secondary / metadata text
+ *   --gh-border      dividers and outlines
+ *   --gh-accent      links, short-sha, active accents
+ *   --gh-success     insertions (+N)
+ *   --gh-danger      deletions (-N) and errors
+ *   --gh-hover       row hover surface
+ *   --gh-selected    selected-row surface
+ *   --gh-font-mono   monospace stack for sha / paths / counts
+ *
+ * GraphRail additionally honors:
+ *   --gh-rail-node-stroke  commit-node outline (defaults to --gh-bg)
+ */
+
+.gh-root {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: minmax(280px, 420px) 1fr;
+  height: 100%;
+  min-height: 0;
+  background: var(--gh-bg, #1e1e1e);
+  color: var(--gh-text, #ddd);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.gh-root *,
+.gh-root *::before,
+.gh-root *::after {
+  box-sizing: border-box;
+}
+
+/* ---- Left column: commit list ---- */
+
+.gh-left {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--gh-border, #333);
+  background: var(--gh-panel, #252525);
+}
+
+.gh-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.gh-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-bottom: 1px solid var(--gh-border, #333);
+  background: transparent;
+  color: var(--gh-text, #ddd);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gh-item:hover {
+  background: var(--gh-hover, rgba(255, 255, 255, 0.05));
+}
+
+.gh-item--active {
+  background: var(--gh-selected, rgba(96, 165, 250, 0.16));
+}
+
+.gh-item:focus-visible {
+  outline: 2px solid var(--gh-accent, #60a5fa);
+  outline-offset: -2px;
+}
+
+.gh-item-rail {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.gh-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.gh-item-subject {
+  font-weight: 500;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gh-item-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  color: var(--gh-muted, #888);
+  font-size: 11px;
+  min-width: 0;
+}
+
+.gh-sha {
+  font-family: var(--gh-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  color: var(--gh-accent, #60a5fa);
+  flex-shrink: 0;
+}
+
+.gh-item-author {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gh-item-when {
+  flex-shrink: 0;
+}
+
+.gh-item-stats {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-family: var(--gh-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+
+.gh-add {
+  color: var(--gh-success, #34d399);
+}
+
+.gh-del {
+  color: var(--gh-danger, #f87171);
+}
+
+/* ---- Load more / status rows ---- */
+
+.gh-loadmore {
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-top: 1px solid var(--gh-border, #333);
+  background: var(--gh-panel, #252525);
+  color: var(--gh-accent, #60a5fa);
+  font: inherit;
+  cursor: pointer;
+}
+
+.gh-loadmore:hover {
+  background: var(--gh-hover, rgba(255, 255, 255, 0.05));
+}
+
+.gh-loadmore:disabled {
+  color: var(--gh-muted, #888);
+  cursor: default;
+}
+
+.gh-status {
+  padding: 16px;
+  color: var(--gh-muted, #888);
+}
+
+.gh-status--error {
+  color: var(--gh-danger, #f87171);
+}
+
+/* ---- Right column: commit detail + diff ---- */
+
+.gh-right {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.gh-detail-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--gh-border, #333);
+}
+
+.gh-detail-subject {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.gh-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  color: var(--gh-muted, #888);
+  font-size: 12px;
+}
+
+.gh-remote-link {
+  color: var(--gh-accent, #60a5fa);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.gh-remote-link:hover {
+  text-decoration: underline;
+}
+
+.gh-detail-body {
+  display: grid;
+  grid-template-columns: minmax(200px, 280px) 1fr;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ---- Changed-file list ---- */
+
+.gh-files {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+  border-right: 1px solid var(--gh-border, #333);
+  background: var(--gh-panel, #252525);
+}
+
+.gh-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-bottom: 1px solid var(--gh-border, #333);
+  background: transparent;
+  color: var(--gh-text, #ddd);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gh-file:hover {
+  background: var(--gh-hover, rgba(255, 255, 255, 0.05));
+}
+
+.gh-file--active {
+  background: var(--gh-selected, rgba(96, 165, 250, 0.16));
+}
+
+.gh-file:focus-visible {
+  outline: 2px solid var(--gh-accent, #60a5fa);
+  outline-offset: -2px;
+}
+
+.gh-file-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.gh-file-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  flex-shrink: 0;
+  font-family: var(--gh-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gh-muted, #888);
+}
+
+.gh-file-path {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--gh-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: rtl;
+  text-align: left;
+}
+
+.gh-file-stats {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  font-family: var(--gh-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+}
+
+/* ---- Diff viewport ---- */
+
+.gh-diff {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: var(--gh-bg, #1e1e1e);
+}
+
+.gh-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+  color: var(--gh-muted, #888);
+  text-align: center;
+}

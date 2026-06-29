@@ -28,6 +28,35 @@ contract.
   staged/working diff content, stage/unstage/discard/commit, and (optional for
   local-only hosts) fetch/pull/push.
 
+## Repository layout (polyglot monorepo)
+
+```
+git-core/                      # the Rust engine (this crate): Cargo.toml, src/, tests/
+packages/
+  git-core-types/              # @surdy/git-core-types  — TS contract, generated from the Rust structs
+  git-history-react/           # @surdy/git-history-react — host-agnostic React history/diff UI
+docs/
+  pterm-migration.md           # hand-off brief: rewriting pterm onto this layer
+```
+
+The three layers:
+
+| Layer | Name | Role |
+|---|---|---|
+| 1 | crate `git-core` | shells out to system `git`, returns serde structs; execution behind `GitTransport` |
+| 2 | `@surdy/git-core-types` | TS types **generated** from layer 1 via ts-rs (drift = compile error) |
+| 3 | `@surdy/git-history-react` | React `GitHistoryPanel`/`GraphRail`/`PierreDiffView`, fed by an injected `GitDataSource` |
+
+### TypeScript type generation
+
+The TS types are generated from the Rust structs, gated behind the `typegen`
+feature so normal consumers never pull in `ts-rs`:
+
+```bash
+pnpm typegen                      # = TS_RS_EXPORT_DIR=... cargo test --features typegen export_bindings
+pnpm -r build                     # build both TS packages
+```
+
 ## Provenance
 
 The engine is carved out of pterm's mature `src-tauri/src/modules/git` module,
@@ -37,9 +66,12 @@ the `GitTransport` seam.
 ## Migration path
 
 - **pterm**: implement `GitTransport` for its `WorkspaceEnv` (Local + WSL),
-  resolve/authorize paths as today, then delegate to `git-core` operations.
+  resolve/authorize paths as today, then delegate to `git-core` operations; swap
+  its TS git types for `@surdy/git-core-types` and its history UI for
+  `@surdy/git-history-react`. Full step-by-step brief: [`docs/pterm-migration.md`](docs/pterm-migration.md).
 - **Notesmith**: use the default `LocalGit` transport for local-only history,
-  diff, status, and auto-commit; never call the remote ops.
+  diff, status, and auto-commit; never call the remote ops. Mount
+  `@surdy/git-history-react` via a React island inside the Svelte app.
 
 ## License
 

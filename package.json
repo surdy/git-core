@@ -1,0 +1,10 @@
+{
+  "name": "git-core-monorepo",
+  "private": true,
+  "description": "Polyglot monorepo: the Rust git-core engine plus its shared TypeScript layers (@surdy/git-core-types, @surdy/git-history-react).",
+  "scripts": {
+    "typegen": "TS_RS_EXPORT_DIR=\"$PWD/packages/git-core-types/src/generated\" cargo test --features typegen export_bindings",
+    "build": "pnpm -r build",
+    "check": "pnpm -r check"
+  }
+}

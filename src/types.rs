@@ -9,6 +9,8 @@ pub(crate) const MAX_FILE_BYTES: u64 = 2 * 1024 * 1024;
 /// Minimum git version supported by the engine.
 pub const MIN_GIT_VERSION: &str = "2.23";
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitRepoInfo {
@@ -18,6 +20,8 @@ pub struct GitRepoInfo {
     pub is_detached: bool,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitChangedFile {
@@ -31,6 +35,8 @@ pub struct GitChangedFile {
     pub status_label: String,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitStatusSnapshot {
@@ -44,6 +50,8 @@ pub struct GitStatusSnapshot {
     pub changed_files: Vec<GitChangedFile>,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitPanelSnapshot {
@@ -51,6 +59,8 @@ pub struct GitPanelSnapshot {
     pub status: Option<GitStatusSnapshot>,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DiscardEntry {
@@ -58,6 +68,8 @@ pub struct DiscardEntry {
     pub untracked: bool,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitDiffResult {
@@ -65,6 +77,8 @@ pub struct GitDiffResult {
     pub truncated: bool,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitDiffContentResult {
@@ -75,6 +89,8 @@ pub struct GitDiffContentResult {
     pub truncated: bool,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitCommitResult {
@@ -82,6 +98,8 @@ pub struct GitCommitResult {
     pub summary: String,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitCommitFileChange {
@@ -94,6 +112,8 @@ pub struct GitCommitFileChange {
     pub is_binary: bool,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitLogEntry {
@@ -101,6 +121,7 @@ pub struct GitLogEntry {
     pub short_sha: String,
     pub author: String,
     pub author_email: String,
+    #[cfg_attr(feature = "typegen", ts(type = "number"))]
     pub timestamp_secs: i64,
     pub parents: Vec<String>,
     pub subject: String,
@@ -109,6 +130,8 @@ pub struct GitLogEntry {
     pub deletions: u32,
 }
 
+#[cfg_attr(feature = "typegen", derive(ts_rs::TS))]
+#[cfg_attr(feature = "typegen", ts(export))]
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GitPushResult {

@@ -1,2 +1,7 @@
+# Rust
 /target
 Cargo.lock
+
+# Node / pnpm
+node_modules/
+packages/*/dist/
