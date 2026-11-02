@@ -139,6 +139,22 @@ fn resolve_repo_finds_root_from_subdir() {
 }
 
 #[test]
+fn commit_accepts_a_message_over_the_linux_argument_limit() {
+    if !git_ready() {
+        return;
+    }
+    let (_guard, repo) = init_repo();
+    std::fs::write(repo.join("a.txt"), "x\n").unwrap();
+    stage(&LocalGit, &repo, &["a.txt".to_string()]).expect("stage");
+    let body = "line of a long commit body\n".repeat(8_000);
+    let message = format!("big\n\n{body}");
+    assert!(message.len() > 128 * 1024);
+
+    let result = commit(&LocalGit, &repo, &message).expect("commit");
+    assert_eq!(result.summary, "big");
+}
+
+#[test]
 fn resolve_repo_outside_repo_returns_none() {
     if !git_ready() {
         return;
