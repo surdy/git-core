@@ -1,4 +1,5 @@
 use std::path::{Path, PathBuf};
+use std::time::Duration;
 
 use crate::errors::{GitError, Result};
 use crate::parser::parse_porcelain_v2;
@@ -299,11 +300,12 @@ pub fn commit(
         return Err(GitError::EmptyCommitMessage);
     }
 
-    let output = run_git(
-        transport,
+    // On stdin, not argv: Linux caps a single argument at 128 KB.
+    let output = transport.run(
         repo_root,
-        &["commit", "-m", trimmed],
-        DEFAULT_TIMEOUT_SECS,
+        &["commit", "-F", "-"],
+        Some(trimmed.as_bytes()),
+        Duration::from_secs(DEFAULT_TIMEOUT_SECS),
     )?;
     if output.exit_code != Some(0) && nothing_to_commit(&output) {
         return Err(GitError::command("git commit", "nothing staged"));
